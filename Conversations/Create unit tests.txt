@@ -1,0 +1,257 @@
+public class Student
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public int Grade { get; set; }
+    public bool Exceptional { get; set; }
+    public bool HonorRoll { get; set; }
+    public bool Passed { get; set; }
+}
+ 
+public class StudentConverter
+{
+    public List<Student> ConvertStudents(List<Student> students)
+    {
+        return students.Select(student =>
+        {
+            var result = new Student
+            {
+                Name = student.Name,
+                Age = student.Age,
+                Grade = student.Grade
+            };
+ 
+            if (student.Grade > 90)
+            {
+                if (student.Age < 21)
+                {
+                    result.Exceptional = true;
+                }
+                else
+                {
+                    result.HonorRoll = true;
+                }
+            }
+            else if (student.Grade > 70)
+            {
+                result.Passed = true;
+            }
+            else
+            {
+                result.Passed = false;
+            }
+ 
+            return result;
+        }).ToList();
+    }
+}
+
+o	Create unit tests that cover ConvertStudents function. Cover following test cases
+Positive Test Cases:
+Case 1: High Achiever
+·	Given an array with a student object of age 21 or above and grade above 90, the function should return an object with the additional field HonorRoll = true.
+Case 2: Exceptional Young High Achiever
+·	Given an array with a student object of age less than 21 and grade above 90, the function should return an object with the additional field Exceptional = true.
+Case 3: Passed Student
+·	Given an array with a student object of grade between 71 and 90 (inclusive), the function should return an object with the additional field Passed = true.
+Case 4: Failed Student
+·	Given an array with a student object of grade 70 or less, the function should return an object with the additional field Passed = false.
+
+ChatGPT
+Sure, here's an example of unit tests using the NUnit framework in C# to cover the ConvertStudents function in the StudentConverter class:
+
+csharp
+Copy code
+using System.Collections.Generic;
+using System.Linq;
+using NUnit.Framework;
+
+[TestFixture]
+public class StudentConverterTests
+{
+    private StudentConverter _studentConverter;
+
+    [SetUp]
+    public void SetUp()
+    {
+        _studentConverter = new StudentConverter();
+    }
+
+    [Test]
+    public void ConvertStudents_HighAchiever_ReturnsHonorRollStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "John", Age = 22, Grade = 95 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.IsTrue(convertedStudents.Single().HonorRoll);
+    }
+
+    [Test]
+    public void ConvertStudents_ExceptionalYoungHighAchiever_ReturnsExceptionalStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Jane", Age = 20, Grade = 95 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.IsTrue(convertedStudents.Single().Exceptional);
+    }
+
+    [Test]
+    public void ConvertStudents_PassedStudent_ReturnsPassedStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Alice", Age = 18, Grade = 80 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.IsTrue(convertedStudents.Single().Passed);
+    }
+
+    [Test]
+    public void ConvertStudents_FailedStudent_ReturnsFailedStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Bob", Age = 19, Grade = 60 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.IsFalse(convertedStudents.Single().Passed);
+    }
+}
+Make sure to add the necessary using statements and references to NUnit in your project. You can also adjust the test data and assertions as needed to match your specific use cases.
+
+
+
+
+User
+Please use XUnit
+ChatGPT
+Of course! Here's an example of the same unit tests using the xUnit framework in C# to cover the ConvertStudents function in the StudentConverter class:
+
+csharp
+Copy code
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
+
+public class StudentConverterTests
+{
+    private readonly StudentConverter _studentConverter;
+
+    public StudentConverterTests()
+    {
+        _studentConverter = new StudentConverter();
+    }
+
+    [Fact]
+    public void ConvertStudents_HighAchiever_ReturnsHonorRollStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "John", Age = 22, Grade = 95 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.True(convertedStudents.Single().HonorRoll);
+    }
+
+    [Fact]
+    public void ConvertStudents_ExceptionalYoungHighAchiever_ReturnsExceptionalStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Jane", Age = 20, Grade = 95 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.True(convertedStudents.Single().Exceptional);
+    }
+
+    [Fact]
+    public void ConvertStudents_PassedStudent_ReturnsPassedStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Alice", Age = 18, Grade = 80 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.True(convertedStudents.Single().Passed);
+    }
+
+    [Fact]
+    public void ConvertStudents_FailedStudent_ReturnsFailedStudent()
+    {
+        var students = new List<Student>
+        {
+            new Student { Name = "Bob", Age = 19, Grade = 60 }
+        };
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.False(convertedStudents.Single().Passed);
+    }
+}
+Don't forget to install the xUnit NuGet package and adjust namespaces and references accordingly. The tests should work in a similar way as the NUnit tests provided earlier.
+
+
+
+
+User
+Please a couple more
+here is the desciption for them
+
+Negative Test Cases:
+Case 1: Empty Array
+·	Given an empty array, the function should return an empty array.
+Case 2: Not an Array 
+•	Given a null as an input the function should throw an error.
+ChatGPT
+Certainly! Here are the additional negative test cases added to the StudentConverterTests class using xUnit:
+
+csharp
+Copy code
+using System;
+using Xunit;
+
+public class StudentConverterTests
+{
+    // ... Other test methods ...
+
+    [Fact]
+    public void ConvertStudents_EmptyArray_ReturnsEmptyArray()
+    {
+        var students = new List<Student>();
+
+        var convertedStudents = _studentConverter.ConvertStudents(students);
+
+        Assert.Empty(convertedStudents);
+    }
+
+    [Fact]
+    public void ConvertStudents_NullArray_ThrowsArgumentNullException()
+    {
+        List<Student> students = null;
+
+        Assert.Throws<ArgumentNullException>(() => _studentConverter.ConvertStudents(students));
+    }
+}
+The ConvertStudents_EmptyArray_ReturnsEmptyArray test checks if the function returns an empty list when given an empty input list.
+
+The ConvertStudents_NullArray_ThrowsArgumentNullException test checks if the function throws an ArgumentNullException when given a null input list. The Assert.Throws method is used to verify that the expected exception is thrown during the execution of the function.
+
+Make sure to adapt your StudentConverter class to handle these scenarios correctly.
