@@ -2,9 +2,9 @@
 
 namespace UseCase7.Helpers;
 
-public class StudentConverter
+public static class StudentConverter
 {
-    public List<Student> ConvertStudents(List<Student> students)
+    public static List<Student> ConvertStudents(List<Student> students)
     {
         return students.Select(student =>
         {

@@ -5,13 +5,6 @@ namespace UseCase7.Tests;
 
 public class StudentConverterTests
 {
-    private readonly StudentConverter _studentConverter;
-
-    public StudentConverterTests()
-    {
-        _studentConverter = new StudentConverter();
-    }
-
     [Fact]
     public void ConvertStudents_HighAchiever_ReturnsHonorRollStudent()
     {
@@ -20,7 +13,7 @@ public class StudentConverterTests
             new() { Name = "John", Age = 22, Grade = 95 }
         };
 
-        var convertedStudents = _studentConverter.ConvertStudents(students);
+        var convertedStudents = StudentConverter.ConvertStudents(students);
 
         Assert.True(convertedStudents.Single().HonorRoll);
     }
@@ -33,7 +26,7 @@ public class StudentConverterTests
             new() { Name = "Jane", Age = 20, Grade = 95 }
         };
 
-        var convertedStudents = _studentConverter.ConvertStudents(students);
+        var convertedStudents = StudentConverter.ConvertStudents(students);
 
         Assert.True(convertedStudents.Single().Exceptional);
     }
@@ -46,7 +39,7 @@ public class StudentConverterTests
             new() { Name = "Alice", Age = 18, Grade = 80 }
         };
 
-        var convertedStudents = _studentConverter.ConvertStudents(students);
+        var convertedStudents = StudentConverter.ConvertStudents(students);
 
         Assert.True(convertedStudents.Single().Passed);
     }
@@ -59,7 +52,7 @@ public class StudentConverterTests
             new() { Name = "Bob", Age = 19, Grade = 60 }
         };
 
-        var convertedStudents = _studentConverter.ConvertStudents(students);
+        var convertedStudents = StudentConverter.ConvertStudents(students);
 
         Assert.False(convertedStudents.Single().Passed);
     }
@@ -69,7 +62,7 @@ public class StudentConverterTests
     {
         var students = new List<Student>();
 
-        var convertedStudents = _studentConverter.ConvertStudents(students);
+        var convertedStudents = StudentConverter.ConvertStudents(students);
 
         Assert.Empty(convertedStudents);
     }
@@ -79,6 +72,6 @@ public class StudentConverterTests
     {
         List<Student> students = null!;
 
-        Assert.Throws<ArgumentNullException>(() => _studentConverter.ConvertStudents(students));
+        Assert.Throws<ArgumentNullException>(() => StudentConverter.ConvertStudents(students));
     }
 }
