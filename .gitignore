@@ -19,7 +19,6 @@ obj/
 
 # Visual Studio files
 .vscode/
-*.sln
 *.suo
 *.user
 *.userprefs

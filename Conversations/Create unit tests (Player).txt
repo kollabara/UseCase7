@@ -1,0 +1,146 @@
+Write tests for next given code
+
+public class Player
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+    public int Experience { get; set; }
+    public List<int> Skills { get; set; }
+}
+ 
+public class PlayerAnalyzer
+{
+    public double CalculateScore(List<Player> players)
+    {
+        double score = 0;
+ 
+        foreach (var player in players)
+        {
+            double skillsAverage = player.Skills.Sum() / (double)player.Skills.Count;
+            double contribution = player.Age * player.Experience * skillsAverage;
+ 
+            if (player.Age < 18)
+            {
+                contribution *= 0.5;
+            }
+ 
+            if (player.Experience > 10)
+            {
+                contribution *= 1.2;
+            }
+ 
+            score += contribution;
+        }
+ 
+        return score;
+    }
+}
+
+Positive Test Cases:
+Case 1: Normal Player
+Given an array with a single player object with age 25, experience 5 years, and skills [2, 2, 2], the function should return a score of 250 (since 2552 = 250).
+Case 2: Junior Player
+Given an array with a single player object with age 15, experience 3 years, and skills [3, 3, 3], the function should return a score of 67.5 (since (1533)*0.5 = 67.5).
+Case 3: Senior Player
+Given an array with a single player object with age 35, experience 15 years, and skills [4, 4, 4], the function should return a score of 2520 (since (35154)*1.2 = 2520).
+Case 4: Multiple Players
+Given an array with multiple player objects, the function should return the sum of their scores.
+Negative Test Cases:
+Case 1: Skills is null
+Given an array with a player where Skills property is null, the function should throw an error
+Case 2: Empty Array
+
+ChatGPT
+Sure, here's an example of unit tests for the PlayerAnalyzer class using the xUnit framework:
+
+csharp
+Copy code
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Xunit;
+
+public class PlayerAnalyzerTests
+{
+    private readonly PlayerAnalyzer _playerAnalyzer;
+
+    public PlayerAnalyzerTests()
+    {
+        _playerAnalyzer = new PlayerAnalyzer();
+    }
+
+    [Fact]
+    public void CalculateScore_NormalPlayer_ReturnsCorrectScore()
+    {
+        var players = new List<Player>
+        {
+            new Player { Name = "John", Age = 25, Experience = 5, Skills = new List<int> { 2, 2, 2 } }
+        };
+
+        var score = _playerAnalyzer.CalculateScore(players);
+
+        Assert.Equal(250, score);
+    }
+
+    [Fact]
+    public void CalculateScore_JuniorPlayer_ReturnsCorrectScore()
+    {
+        var players = new List<Player>
+        {
+            new Player { Name = "Jane", Age = 15, Experience = 3, Skills = new List<int> { 3, 3, 3 } }
+        };
+
+        var score = _playerAnalyzer.CalculateScore(players);
+
+        Assert.Equal(67.5, score);
+    }
+
+    [Fact]
+    public void CalculateScore_SeniorPlayer_ReturnsCorrectScore()
+    {
+        var players = new List<Player>
+        {
+            new Player { Name = "Alice", Age = 35, Experience = 15, Skills = new List<int> { 4, 4, 4 } }
+        };
+
+        var score = _playerAnalyzer.CalculateScore(players);
+
+        Assert.Equal(2520, score);
+    }
+
+    [Fact]
+    public void CalculateScore_MultiplePlayers_ReturnsSumOfScores()
+    {
+        var players = new List<Player>
+        {
+            new Player { Name = "John", Age = 25, Experience = 5, Skills = new List<int> { 2, 2, 2 } },
+            new Player { Name = "Jane", Age = 15, Experience = 3, Skills = new List<int> { 3, 3, 3 } }
+        };
+
+        var score = _playerAnalyzer.CalculateScore(players);
+
+        Assert.Equal(250 + 67.5, score);
+    }
+
+    [Fact]
+    public void CalculateScore_SkillsIsNull_ThrowsArgumentNullException()
+    {
+        var players = new List<Player>
+        {
+            new Player { Name = "Alice", Age = 35, Experience = 15, Skills = null }
+        };
+
+        Assert.Throws<ArgumentNullException>(() => _playerAnalyzer.CalculateScore(players));
+    }
+
+    [Fact]
+    public void CalculateScore_EmptyArray_ReturnsZeroScore()
+    {
+        var players = new List<Player>();
+
+        var score = _playerAnalyzer.CalculateScore(players);
+
+        Assert.Equal(0, score);
+    }
+}
+This set of tests covers the positive and negative scenarios you described. Be sure to adapt your PlayerAnalyzer class to handle these scenarios accordingly.
